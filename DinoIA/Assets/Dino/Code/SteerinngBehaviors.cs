@@ -71,7 +71,7 @@ public class SteerinngBehaviors : MonoBehaviour
     {
         Vector3 lastVel = currentVel;
         float magnitude = distance.magnitude;
-        float radiusFarAway = 25f;
+        float radiusFarAway = 15f;
 
         if (magnitude >= radiusFarAway)
         {
