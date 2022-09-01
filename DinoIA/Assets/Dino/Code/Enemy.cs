@@ -5,15 +5,21 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public GameObject player;
-    void Start()
-    {
-        
-    }
+    public float mass = 1;
+    
+    public bool isSeek;
+    public bool isFlee;
 
-    // Update is called once per frame
     void Update()
     {
-        SteerinngBehaviors.Instance.CalculateSeekBH(gameObject , player);
-        // SteerinngBehaviors.Instance.CalculateFlee(gameObject , player);
+        if (isFlee && !isSeek)
+        {
+            SteerinngBehaviors.Instance.CalculateFlee(gameObject , player, mass);
+        }
+
+        if (isSeek && !isFlee)
+        {
+            SteerinngBehaviors.Instance.CalculateSeekBH(gameObject , player, mass);
+        }
     }
 }

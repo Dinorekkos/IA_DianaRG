@@ -5,20 +5,14 @@ using UnityEngine;
 public class SteerinngBehaviors : MonoBehaviour
 {
     public static SteerinngBehaviors Instance;
-    public float speed = 5;
+    public float speed = 7;
  
     void Start()
     {
         Instance = this;
     }
 
-  
-    void Update()
-    {
-
-    }
-
-    public void CalculateSeekBH(GameObject enemy, GameObject target)
+    public void CalculateSeekBH(GameObject enemy, GameObject target, float mass)
     {
         
         Vector3 currentVel = Vector3.zero;
@@ -26,17 +20,14 @@ public class SteerinngBehaviors : MonoBehaviour
         Vector3 desiredVelocity;
         
         Vector3 distance = enemy.transform.position - target.transform.position;
-        
-        desiredVelocity = distance.normalized * (speed);
+        desiredVelocity = distance.normalized * (speed / mass);
         steering = desiredVelocity - currentVel;
         currentVel += steering * Time.deltaTime;
 
-       
-        
-        enemy.transform.position -=  CalculateArrival(distance, currentVel);;
+        enemy.transform.position -= CalculateArrival(distance, currentVel);
     }
 
-    public void CalculateFlee(GameObject enemy, GameObject target)
+    public void CalculateFlee(GameObject enemy, GameObject target, float mass)
     {
         Vector3 currentVel = Vector3.zero;
         Vector3 steering;
@@ -44,27 +35,49 @@ public class SteerinngBehaviors : MonoBehaviour
         
         Vector3 distance = target.transform.position - enemy.transform.position ;
         
-        desiredVelocity = distance.normalized  * speed ;
+        desiredVelocity = distance.normalized  * (speed/mass) ;
 
         steering = desiredVelocity - currentVel;
         currentVel += steering * Time.deltaTime;
 
-        // CalculateArrival(distance, currentVel);
 
-        enemy.transform.position -= currentVel;
+        enemy.transform.position -= CalculateFarAway(distance, currentVel);
     }
 
     public Vector3 CalculateArrival(Vector3 distance, Vector3 currenVel)
     {
-        Vector3 arrival = Vector3.zero;
+        Vector3 arrivalVel = currenVel;
         float magnitude = distance.magnitude;
-        float radius = 3f;
+        float radiusClose = 9f;
 
-        if (magnitude < radius)
+        if (magnitude <= radiusClose && magnitude > radiusClose/2)
         {
-            arrival = currenVel * 0.5f;
+            arrivalVel = currenVel * 1f;
         }
+        else if (magnitude <= radiusClose/2 && magnitude > 1) 
+        {
+            arrivalVel = currenVel * 0.5f;
+        }
+        else if (magnitude < 1)
+        {
+            arrivalVel = currenVel * 0f;
+        }
+        
+        return arrivalVel;
+    }
 
-        return arrival;
+
+    public Vector3 CalculateFarAway(Vector3 distance, Vector3 currentVel)
+    {
+        Vector3 lastVel = currentVel;
+        float magnitude = distance.magnitude;
+        float radiusFarAway = 25f;
+
+        if (magnitude >= radiusFarAway)
+        {
+            lastVel = Vector3.zero;
+        }
+        
+        return lastVel;
     }
 }
