@@ -7,20 +7,31 @@ public class PlayerMove : MonoBehaviour
 {
     private Keyboard keyboard;
     public float speed = 3;
+    private Vector3 prevPosition;
+
+    public Vector3 currentVelocity;
+    private Mouse mouse;
     void Start()
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
         keyboard = Keyboard.current;
+        mouse = Mouse.current;
 #endif
     }
 
     // Update is called once per frame
     void Update()
     {
-        MovePlayer();
+        Vector3 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        transform.position = position;
+        
+        GetVelocity();  
     }
 
-
+    void GetVelocity()
+    {
+        currentVelocity = transform.position - prevPosition / Time.deltaTime;
+    }
     void MovePlayer()
     {
         if (keyboard.aKey.isPressed)

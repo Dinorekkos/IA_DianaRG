@@ -1,25 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : SteerinngBehaviors
 {
     public GameObject player;
-    public float mass = 1;
-    
+
+    private PlayerMove _playerMove;
+    public bool pursuitDynamic;
     public bool isSeek;
     public bool isFlee;
 
+    private void Start()
+    {
+        _playerMove = player.GetComponent<PlayerMove>();
+    }
+
     void Update()
     {
-        if (isFlee && !isSeek)
-        {
-            SteerinngBehaviors.Instance.CalculateFlee(gameObject , player, mass);
-        }
+        // if (isFlee && !isSeek)
+        // {
+        //    CalculateFlee(gameObject , player, mass);
+        // }
+        //
+        // if (isSeek && !isFlee)
+        // {
+        //   CalculateSeekBH(gameObject , player, mass);
+        // }
 
-        if (isSeek && !isFlee)
-        {
-            SteerinngBehaviors.Instance.CalculateSeekBH(gameObject , player, mass);
-        }
+
+        DoPursuit(Seek_WITHOUTARRIVAL(player), pursuitDynamic, _playerMove);
     }
 }

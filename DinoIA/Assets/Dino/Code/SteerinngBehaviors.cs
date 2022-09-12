@@ -4,36 +4,32 @@ using UnityEngine;
 
 public class SteerinngBehaviors : MonoBehaviour
 {
-    public static SteerinngBehaviors Instance;
-    public float speed = 7;
- 
-    void Start()
-    {
-        Instance = this;
-    }
 
-    public void CalculateSeekBH(GameObject enemy, GameObject target, float mass)
+    public float speed = 7;
+    public float mass = 1;
+    public float T = 1;
+    public void CalculateSeekBH(GameObject target)
     {
         
         Vector3 currentVel = Vector3.zero;
         Vector3 steering;
         Vector3 desiredVelocity;
         
-        Vector3 distance = enemy.transform.position - target.transform.position;
+        Vector3 distance = this.transform.position - target.transform.position;
         desiredVelocity = distance.normalized * (speed / mass);
         steering = desiredVelocity - currentVel;
         currentVel += steering * Time.deltaTime;
 
-        enemy.transform.position -= CalculateArrival(distance, currentVel);
+        this.transform.position -= CalculateArrival(distance, currentVel);
     }
 
-    public void CalculateFlee(GameObject enemy, GameObject target, float mass)
+    public void CalculateFlee(GameObject target)
     {
         Vector3 currentVel = Vector3.zero;
         Vector3 steering;
         Vector3 desiredVelocity;
         
-        Vector3 distance = target.transform.position - enemy.transform.position ;
+        Vector3 distance = target.transform.position - this.transform.position ;
         
         desiredVelocity = distance.normalized  * (speed/mass) ;
 
@@ -41,7 +37,7 @@ public class SteerinngBehaviors : MonoBehaviour
         currentVel += steering * Time.deltaTime;
 
 
-        enemy.transform.position -= CalculateFarAway(distance, currentVel);
+        this.transform.position -= CalculateFarAway(distance, currentVel);
     }
 
     public Vector3 CalculateArrival(Vector3 distance, Vector3 currenVel)
@@ -79,5 +75,27 @@ public class SteerinngBehaviors : MonoBehaviour
         }
         
         return lastVel;
+    }
+    
+    public Vector3 Seek_WITHOUTARRIVAL(GameObject target)
+    {
+        
+        Vector3 currentVel = Vector3.zero;
+        Vector3 steering;
+        Vector3 desiredVelocity;
+        
+        Vector3 distance = this.transform.position - target.transform.position;
+        desiredVelocity = distance.normalized * (speed / mass);
+        steering = desiredVelocity - currentVel;
+        currentVel += steering * Time.deltaTime;
+
+        this.transform.position -= currentVel;
+
+        return currentVel;
+    }
+
+    public void DoPursuit(Vector3 seek, bool dynamic, PlayerMove player)
+    {
+        
     }
 }

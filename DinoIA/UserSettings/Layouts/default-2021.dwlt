@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 6}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -65,12 +65,12 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 819
+    x: 573
     y: 0
-    width: 453
+    width: 699
     height: 640
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 75
+  controlID: 62
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 120
+  controlID: 152
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -291,10 +291,10 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 819
+    width: 573
     height: 640
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -411,23 +411,23 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: d4bfffff
-      m_LastClickedID: -16428
-      m_ExpandedIDs: d4bfffff28c1ffff40cdffff94ceffffe8870000
+      m_SelectedIDs: 5a310000
+      m_LastClickedID: 0
+      m_ExpandedIDs: b6caffff88ccffff3ccdffff8cceffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: Sphere
-        m_OriginalName: Sphere
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -21360
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 2}
       m_SearchString: 
@@ -459,7 +459,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 73
-    width: 818
+    width: 572
     height: 619
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -762,9 +762,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 819
+    x: 573
     y: 73
-    width: 451
+    width: 697
     height: 619
   m_ViewDataDictionary: {fileID: 0}
   m_OverlayCanvas:
@@ -812,10 +812,10 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 451
+      width: 697
       height: 598
-    m_Scale: {x: 0.11744792, y: 0.11744791}
-    m_Translation: {x: 225.5, y: 299}
+    m_Scale: {x: 0.18151042, y: 0.18151042}
+    m_Translation: {x: 348.5, y: 299}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -823,12 +823,12 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -1920
-      y: -2545.8093
+      y: -1647.2883
       width: 3840
-      height: 5091.6187
+      height: 3294.5767
     m_MinimalGUI: 1
-  m_defaultScale: 0.11744792
-  m_LastWindowPixelSize: {x: 451, y: 619}
+  m_defaultScale: 0.18151042
+  m_LastWindowPixelSize: {x: 697, y: 619}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -875,22 +875,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Dino/Ex 2
+    - Assets/Dino/Code
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Dino/Ex 2
+  - Assets/Dino/Code
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Rojo15\Documents\Unity Projects\Dino\ia\IA_DianaRG\DinoIA
+  m_LastProjectPath: C:\Users\Usuario\Documents\Unity Projects\DINO\IA_DianaRG\DinoIA
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: a2880000
-    m_LastClickedID: 34978
-    m_ExpandedIDs: 000000007e8700008087000000ca9a3b
+    m_SelectedIDs: 90870000
+    m_LastClickedID: 34704
+    m_ExpandedIDs: 000000006a8700006c87000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
