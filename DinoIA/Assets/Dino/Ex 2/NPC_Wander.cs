@@ -40,31 +40,6 @@ public class NPC_Wander : SteerinngBehaviors
         
     }
 
-    // void CalculateSeek(Vector3 posTarget)
-    // {
-    //     Vector3 distanceVel = posTarget - transform.position;
-    //     Vector3 desiredVel = distanceVel.normalized * speed;
-    //     Vector3 steering = desiredVel - velocity;
-    //     velocity += steering * Time.deltaTime;
-    //     transform.position += velocity * Time.deltaTime;
-    // }
-    
-    
-    // void Wander()
-    // {
-    //     Vector3 distanceCircle = velocity.normalized * distanceC;
-    //     Vector3 radiusV = distanceCircle + (velocity.normalized * radius);
-    //     
-    //     Vector3 steering = distanceCircle + radiusV;
-    //
-    //     velocity += steering * Time.deltaTime;
-    //     transform.position += velocity * Time.deltaTime;
-    //
-    //     circle.transform.position = transform.position + (velocity.normalized * distanceC);
-    //     
-    //    
-    //
-    // }
     
     
     

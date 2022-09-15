@@ -86,33 +86,21 @@ public class SteerinngBehaviors : MonoBehaviour
     {
         
     }
-
-    public Vector3 CalculateWander(float distanceC, float angle)
-    { 
-        Vector3 wander = Vector3.zero;
-        Vector3 distanceCircle = velocity.normalized * distanceC;
-        // Vector3 rotationObject = 
-        // Vector3 target = distanceC + 
-
-        
-        return wander;
-    }
-    
     
     
     public Vector3 CalculateWander(float angle, float distanceC, float radius)
     {
         Vector3 distanceCircle = transform.position + (velocity.normalized * distanceC);
-        Vector3 rotated = Quaternion.AngleAxis(angle, Vector3.right) * velocity.normalized;
-        Vector3 wanderTragetDir = distanceCircle + (rotated * radius);
+        Vector3 rotated = Quaternion.AngleAxis(angle, Vector3.forward) * velocity.normalized;
+        Vector3 circleDir = distanceCircle + (rotated * radius);
 
         if(showVectors)
         {
             Debug.DrawRay(transform.position, distanceCircle - transform.position, Color.blue);
-            Debug.DrawRay(distanceCircle, wanderTragetDir - distanceCircle, Color.red);
+            Debug.DrawRay(distanceCircle, circleDir - distanceCircle, Color.red);
         }
 
-        return CalculateSeek(wanderTragetDir);
+        return CalculateSeek(circleDir);
     }
 
 
