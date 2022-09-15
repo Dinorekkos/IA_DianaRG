@@ -19,17 +19,6 @@ public class Enemy : SteerinngBehaviors
 
     void Update()
     {
-        // if (isFlee && !isSeek)
-        // {
-        //    CalculateFlee(gameObject , player, mass);
-        // }
-        //
-        // if (isSeek && !isFlee)
-        // {
-        //   CalculateSeekBH(gameObject , player, mass);
-        // }
-
-
-        DoPursuit(Seek_WITHOUTARRIVAL(player), pursuitDynamic, _playerMove);
+        // DoPursuit(CalculateSeek(player.transform.position), pursuitDynamic, _playerMove);
     }
 }
