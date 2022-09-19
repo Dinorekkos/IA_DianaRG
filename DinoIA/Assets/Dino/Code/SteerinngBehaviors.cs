@@ -6,110 +6,117 @@ public class SteerinngBehaviors : MonoBehaviour
 {
     [Header("Steering Behaviors")] 
     
-    public Transform Target;
-    public float speed = 7;
-    public float mass = 1;
-    public float T = 1;
-    public Vector3 velocity;
-
-
-    [Header("Wander")] 
-    public bool showVectors;
+    public Transform _target;
+    public float _speed = 7;
+    public float _mass = 1;
+    public float radiusAway = 10;
+    public float radiusArrival= 5;
+    public float _T = 1;
+    public Vector3 _velocity;
+    
+    private Vector3 _desiredVelocity;
     
     
-    Vector3 desiredVelocity;
-    
-    
-
-    // public void CalculateFlee(GameObject target)
-    // {
-        // Vector3 currentVel = Vector3.zero;
-        // Vector3 steering;
-        // Vector3 desiredVelocity;
-        
-        // Vector3 distance = target.transform.position - this.transform.position ;
-        
-        // desiredVelocity = distance.normalized  * (speed/mass) ;
-
-        // steering = desiredVelocity - currentVel;
-        // currentVel += steering * Time.deltaTime;
-
-
-        // this.transform.position -= CalculateFarAway(distance, currentVel);
-    // }
-
-    public Vector3 CalculateArrival(Vector3 distance, Vector3 currenVel)
+    public Vector3 CalculateSeek(Vector3 target, bool hasArrival)
     {
-        Vector3 arrivalVel = currenVel;
-        float magnitude = distance.magnitude;
-        float radiusClose = 9f;
+        Vector3 distance =  target - transform.position ;
+        _desiredVelocity = distance.normalized * (_speed / _mass);
+        Vector3 steering = _desiredVelocity - _velocity;
+        Vector3 seek = steering;
 
-        if (magnitude <= radiusClose && magnitude > radiusClose/2)
+        if (hasArrival) seek += CalculateArrival(target);
+
+        return seek;
+    }
+    public Vector3 CalculateFlee(Vector3 target)
+    {
+        Vector3 steering = CalculateSeek(target, false);
+        steering = -1 * steering;
+        
+        return steering;
+    }
+
+    public Vector3 CalculateArrival(Vector3 distance)
+    {
+        Vector3 arrivalVel = _velocity;
+        float magnitude = distance.magnitude;
+        
+        if (magnitude <= radiusArrival && magnitude > radiusArrival/2)
         {
-            arrivalVel = currenVel * 1f;
+            arrivalVel = _velocity * 1f;
         }
-        else if (magnitude <= radiusClose/2 && magnitude > 1) 
+        else if (magnitude <= radiusArrival/2 && magnitude > 1) 
         {
-            arrivalVel = currenVel * 0.5f;
+            arrivalVel = _velocity * 0.5f;
         }
         else if (magnitude < 1)
         {
-            arrivalVel = currenVel * 0f;
+            arrivalVel = _velocity * 0f;
         }
         
+        print(magnitude);
         return arrivalVel;
     }
-    public Vector3 CalculateFarAway(Vector3 distance, Vector3 currentVel)
+    public bool CalculateFarAway(Vector3 distance)
     {
-        Vector3 lastVel = currentVel;
         float magnitude = distance.magnitude;
-        float radiusFarAway = 15f;
-
-        if (magnitude >= radiusFarAway)
+        if (magnitude >= radiusAway)
         {
-            lastVel = Vector3.zero;
+            _velocity = Vector3.zero;
+            return false;
         }
-        
-        return lastVel;
+
+        return true;
     }
     
-    public Vector3 CalculateSeek(Vector3 target)
+    public Vector3 CalculatePursuit(Vector3 target, bool isDynamic, bool arrival)
     {
-        Vector3 distance =  target - transform.position ;
-        desiredVelocity = distance.normalized * speed ;
-        Vector3 steering = desiredVelocity - velocity;
-        Vector3 seek = steering;
-        return seek;
+        Vector3 prevPosition = Vector3.zero;
+        Vector3 frameTargetVelocity = Vector3.zero;
+        Vector3 futurePos = Vector3.zero;
+
+        Vector3 currentVelocity = transform.position - prevPosition / Time.deltaTime;
+        frameTargetVelocity = Vector3.Lerp(frameTargetVelocity, currentVelocity, 0.1f);
+        prevPosition = target;
+
+        if (isDynamic)
+        {
+            _T = (target - transform.position).magnitude / _speed;
+        }
+
+        futurePos = target + (frameTargetVelocity * _T);
+
+        return CalculateSeek(futurePos, arrival);
     }
 
-    public void CalculatePursuit(Vector3 seek, bool dynamic, PlayerMove player)
+    public Vector3 CalculateEvade(Vector3 target, bool isDynamic)
     {
-        
+        Vector3 evade = (-1) * CalculatePursuit(target,isDynamic,false);
+        return evade;
     }
-    
-    
-    public Vector3 CalculateWander(float angle, float distanceC, float radius)
+    public Vector3 CalculateWander(float angle, float distanceC, float radius, bool arrival)
     {
-        Vector3 distanceCircle = transform.position + (velocity.normalized * distanceC);
-        Vector3 rotated = Quaternion.AngleAxis(angle, Vector3.forward) * velocity.normalized;
+        Vector3 distanceCircle = transform.position + (_velocity.normalized * distanceC);
+        Vector3 rotated = Quaternion.AngleAxis(angle, Vector3.forward) * _velocity.normalized;
         Vector3 circleDir = distanceCircle + (rotated * radius);
 
-        if(showVectors)
-        {
-            Debug.DrawRay(transform.position, distanceCircle - transform.position, Color.blue);
-            Debug.DrawRay(distanceCircle, circleDir - distanceCircle, Color.red);
-        }
-
-        return CalculateSeek(circleDir);
+        return CalculateSeek(circleDir, arrival);
     }
 
 
-    public void Move(Vector3 steering)
+    public void Move(Vector3 steering,bool is3D)
     {
-        velocity = Vector3.ClampMagnitude(velocity + steering * Time.deltaTime, speed);
-        transform.position += velocity * Time.deltaTime;
-
-        float rotation = Vector3.SignedAngle(Vector3.forward, desiredVelocity,transform.eulerAngles);
-        transform.eulerAngles = new Vector3(0, rotation, 0);
+        _velocity = Vector3.ClampMagnitude(_velocity + steering * Time.deltaTime, _speed);
+       
+        if (CalculateFarAway(_target.position))
+            transform.position += _velocity * Time.deltaTime;
+        
+        
+        if (is3D)
+        {
+            float rotation = Vector3.SignedAngle(Vector3.forward, _desiredVelocity,transform.eulerAngles);
+            transform.eulerAngles = new Vector3(0, rotation, 0);
+        }
+       
     }
 }

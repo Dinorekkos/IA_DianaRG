@@ -9,7 +9,6 @@ public class NPC_Wander : SteerinngBehaviors
     public float radius = 1;
     public Vector3 wanderDirection;
     
-    public Vector3 randomTarget;
     public float wanderAngle;
 
     
@@ -23,11 +22,11 @@ public class NPC_Wander : SteerinngBehaviors
 
     void Update()
     {
-        Vector3 wander = CalculateWander(wanderAngle, distanceCircle, radius);
-        Vector3 seek = CalculateSeek(Target.position);
+        Vector3 wander = CalculateWander(wanderAngle, distanceCircle, radius, false);
+        Vector3 seek = CalculateSeek(_target.position, false);
         wanderDirection = wander + seek;
-        Move(wanderDirection);
-        circle.transform.position = transform.position + (velocity.normalized * distanceCircle);
+        Move(wanderDirection, true);
+        circle.transform.position = transform.position + (_velocity.normalized * distanceCircle);
     }
 
     IEnumerator UpdateTarget()

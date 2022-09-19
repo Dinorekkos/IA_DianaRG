@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private Keyboard keyboard;
     public float speed = 3;
@@ -11,27 +11,24 @@ public class PlayerMove : MonoBehaviour
 
     public Vector3 currentVelocity;
     private Mouse mouse;
+    private Vector2 mouseAxis;
     void Start()
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
         keyboard = Keyboard.current;
         mouse = Mouse.current;
 #endif
+        
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Vector3 position = Camera.main.ScreenToViewportPoint(Input.mousePosition);
-        transform.position = position;
+        mouseAxis = mouse.position.ReadValue();
+        Vector3 position = Camera.main.ScreenToWorldPoint(mouseAxis);
+        transform.position = new Vector3(position.x, position.y, 0);
         
-        GetVelocity();  
     }
-
-    void GetVelocity()
-    {
-        currentVelocity = transform.position - prevPosition / Time.deltaTime;
-    }
+    
     void MovePlayer()
     {
         if (keyboard.aKey.isPressed)
