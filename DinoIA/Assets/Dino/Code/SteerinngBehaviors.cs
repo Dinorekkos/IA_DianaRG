@@ -6,7 +6,7 @@ public class SteerinngBehaviors : MonoBehaviour
 {
     [Header("Steering Behaviors")] 
     
-    public Transform _target;
+    public Vector3 _target;
     public float _speed = 7;
     public float _mass = 1;
     public float radiusAway = 10;
@@ -104,12 +104,20 @@ public class SteerinngBehaviors : MonoBehaviour
     }
 
 
-    public void Move(Vector3 steering,bool is3D)
+    public void Move(Vector3 steering,bool is3D, bool farAway)
     {
         _velocity = Vector3.ClampMagnitude(_velocity + steering * Time.deltaTime, _speed);
-       
-        if (CalculateFarAway(_target.position))
+
+        if (farAway)
+        {
+            if (CalculateFarAway(_target))
+                transform.position += _velocity * Time.deltaTime;
+        }
+        else
+        {
             transform.position += _velocity * Time.deltaTime;
+        }
+        
         
         
         if (is3D)

@@ -17,10 +17,10 @@ public class Enemy : SteerinngBehaviors
 
     void Update()
     {
-       if(isSeek) Move(CalculateSeek(_target.position, hasArrival), is3D);
-       if(isFlee) Move(CalculateFlee(_target.position), is3D);
+       if(isSeek) Move(CalculateSeek(_target, hasArrival), is3D, false);
+       if(isFlee) Move(CalculateFlee(_target), is3D, false);
        
-       if(isPursuit)Move(CalculatePursuit(_target.position, isPursuitDynamic, hasArrival), is3D);
-        if(isEvade) Move(CalculateEvade(_target.position, isPursuitDynamic), is3D);
+       if(isPursuit)Move(CalculatePursuit(_target, isPursuitDynamic, hasArrival), is3D, false);
+        if(isEvade) Move(CalculateEvade(_target, isPursuitDynamic), is3D, false);
     }
 }

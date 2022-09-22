@@ -23,9 +23,9 @@ public class NPC_Wander : SteerinngBehaviors
     void Update()
     {
         Vector3 wander = CalculateWander(wanderAngle, distanceCircle, radius, false);
-        Vector3 seek = CalculateSeek(_target.position, false);
+        Vector3 seek = CalculateSeek(_target, false);
         wanderDirection = wander + seek;
-        Move(wanderDirection, true);
+        Move(wanderDirection, true, false);
         circle.transform.position = transform.position + (_velocity.normalized * distanceCircle);
     }
 

@@ -1,21 +1,26 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : SteerinngBehaviors
 {
-    private Keyboard keyboard;
-    public float speed = 3;
-    private Vector3 prevPosition;
+    [Header("Player Movement")]
+    public Vector3 positionClick;
 
-    public Vector3 currentVelocity;
     private Mouse mouse;
     private Vector2 mouseAxis;
+    public Action<GameObject> OnCollectObj;
+
+
+
+    // private Keyboard keyboard;
+    // public float speed = 3;
+
     void Start()
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
-        keyboard = Keyboard.current;
+        // keyboard = Keyboard.current;
         mouse = Mouse.current;
 #endif
         
@@ -23,34 +28,47 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        mouseAxis = mouse.position.ReadValue();
-        Vector3 position = Camera.main.ScreenToWorldPoint(mouseAxis);
-        transform.position = new Vector3(position.x, position.y, 0);
+        if (mouse.leftButton.wasPressedThisFrame)
+        {
+            mouseAxis = mouse.position.ReadValue(); 
+            positionClick = Camera.main.ScreenToWorldPoint(mouseAxis);
+            positionClick = new Vector3(positionClick.x, positionClick.y, 0);
+        }
+
+        Move(CalculateSeek(positionClick, false), false, false);
         
     }
     
-    void MovePlayer()
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (keyboard.aKey.isPressed)
+        if (col.gameObject.GetComponent<CollectableObj_Tarea3>())
         {
-            transform.position += Vector3.left * speed * Time.deltaTime;
+            OnCollectObj?.Invoke(col.gameObject);
+            print("Add to list");
         }
-        
-        
-        if (keyboard.dKey.isPressed)
-        {
-            transform.position += Vector3.right * speed * Time.deltaTime;   
-        }
-
-        if (keyboard.wKey.isPressed)
-        {
-            transform.position += Vector3.forward * speed * Time.deltaTime;  
-        }
-
-        if (keyboard.sKey.isPressed)
-        {
-            transform.position += Vector3.back * speed * Time.deltaTime;  
-        }
-        
     }
+    
+    
+    // void MovePlayer()
+    // {
+        // if (keyboard.aKey.isPressed)
+        // {
+            // transform.position += Vector3.left * speed * Time.deltaTime;
+        // }
+        // if (keyboard.dKey.isPressed)
+        // {
+            // transform.position += Vector3.right * speed * Time.deltaTime;   
+        // }
+
+        // if (keyboard.wKey.isPressed)
+        // {
+            // transform.position += Vector3.forward * speed * Time.deltaTime;  
+        // }
+
+        // if (keyboard.sKey.isPressed)
+        // {
+            // transform.position += Vector3.back * speed * Time.deltaTime;  
+        // }
+        
+    // }
 }
