@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : SteerinngBehaviors
 {
+
+    public static PlayerMovement Instance;
+    
+    
     [Header("Player Movement")]
     public Vector3 positionClick;
 
@@ -16,6 +20,11 @@ public class PlayerMovement : SteerinngBehaviors
 
     // private Keyboard keyboard;
     // public float speed = 3;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -43,8 +52,14 @@ public class PlayerMovement : SteerinngBehaviors
     {
         if (col.gameObject.GetComponent<CollectableObj_Tarea3>())
         {
+            col.isTrigger = false; 
+            CollectableObj_Tarea3 collectable = col.gameObject.GetComponent<CollectableObj_Tarea3>();
+            if (collectable.isFlee) collectable.isFlee = false;
+            collectable.isCollected = true;
+            
             OnCollectObj?.Invoke(col.gameObject);
-            print("Add to list");
+            collectable._indexList = Tarea3Controller.Instance.collectedObjects.Count - 2;
+           
         }
     }
     

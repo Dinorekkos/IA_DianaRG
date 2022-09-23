@@ -262,8 +262,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d68a7fa000af254f86612f9f2d1c233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
-  currentVelocity: {x: 0, y: 0, z: 0}
+  _target: {x: 0, y: 0, z: 0}
+  _speed: 7
+  _mass: 1
+  radiusAway: 10
+  radiusArrival: 5
+  _T: 1
+  _velocity: {x: 0, y: 0, z: 0}
+  positionClick: {x: 0, y: 0, z: 0}
 --- !u!1 &1148998102
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,8 +483,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8143efaee50da54c82a0a5f9d312ffc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 220155896}
-  _speed: 7
+  _target: {x: 0, y: 0, z: 0}
+  _speed: 2
   _mass: 1
   radiusAway: 10
   radiusArrival: 5
@@ -487,10 +493,10 @@ MonoBehaviour:
   isPursuitDynamic: 0
   is3D: 0
   hasArrival: 0
-  isSeek: 1
+  isSeek: 0
   isFlee: 0
   isPursuit: 0
-  isEvade: 0
+  isEvade: 1
 --- !u!1 &1924390195
 GameObject:
   m_ObjectHideFlags: 0

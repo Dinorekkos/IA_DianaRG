@@ -63,10 +63,11 @@ public class SteerinngBehaviors : MonoBehaviour
         if (magnitude >= radiusAway)
         {
             _velocity = Vector3.zero;
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
+       
     }
     
     public Vector3 CalculatePursuit(Vector3 target, bool isDynamic, bool arrival)
@@ -75,7 +76,7 @@ public class SteerinngBehaviors : MonoBehaviour
         Vector3 frameTargetVelocity = Vector3.zero;
         Vector3 futurePos = Vector3.zero;
 
-        Vector3 currentVelocity = transform.position - prevPosition / Time.deltaTime;
+        Vector3 currentVelocity = (target - prevPosition) / Time.deltaTime;
         frameTargetVelocity = Vector3.Lerp(frameTargetVelocity, currentVelocity, 0.1f);
         prevPosition = target;
 
@@ -111,7 +112,9 @@ public class SteerinngBehaviors : MonoBehaviour
         if (farAway)
         {
             if (CalculateFarAway(_target))
+            {
                 transform.position += _velocity * Time.deltaTime;
+            }
         }
         else
         {

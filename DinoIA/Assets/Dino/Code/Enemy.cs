@@ -17,6 +17,8 @@ public class Enemy : SteerinngBehaviors
 
     void Update()
     {
+        _target = PlayerMovement.Instance.positionClick;
+        
        if(isSeek) Move(CalculateSeek(_target, hasArrival), is3D, false);
        if(isFlee) Move(CalculateFlee(_target), is3D, false);
        
