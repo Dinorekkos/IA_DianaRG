@@ -55,6 +55,7 @@ public class PlayerMovement : SteerinngBehaviors
             col.isTrigger = false; 
             CollectableObj_Tarea3 collectable = col.gameObject.GetComponent<CollectableObj_Tarea3>();
             if (collectable.isFlee) collectable.isFlee = false;
+            if (collectable.isEvade) collectable.isEvade = false;
             collectable.isCollected = true;
             
             OnCollectObj?.Invoke(col.gameObject);

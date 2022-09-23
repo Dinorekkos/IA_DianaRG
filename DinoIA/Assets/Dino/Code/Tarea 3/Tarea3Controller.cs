@@ -10,6 +10,7 @@ public class Tarea3Controller : MonoBehaviour
     public int currentPeaked;
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] public List<GameObject> collectedObjects;
+    [SerializeField] public Queue QueueObjects;
     [SerializeField] public GameObject firstCollectable;
     [SerializeField] public List<CollectableObj_Tarea3> collectablesInScene;
     [SerializeField] public Queue<GameObject> pursuitObjects;
@@ -24,6 +25,7 @@ public class Tarea3Controller : MonoBehaviour
     {
         _playerMovement.OnCollectObj += AddCollectableToRow;
         pursuitObjects = new Queue<GameObject>();
+        QueueObjects = new Queue();
     }
 
     // Update is called once per frame
@@ -72,37 +74,28 @@ public class Tarea3Controller : MonoBehaviour
                     collectablesInScene[i].isEvade = true;
                 }
             }
-            for (int i = 0; i < 2; i++)
+
+            for (int i = 0; i < 3; i++)
             {
                 CollectableObj_Tarea3 collectable = pursuitObjects.Peek().GetComponent<CollectableObj_Tarea3>();
                 collectable.isCollected = false;
                 collectable.isPursuit = true;
                 pursuitObjects.Dequeue();
-
             }
-            collectedObjects.Remove(collectedObjects[0]);
-            collectedObjects.Remove(collectedObjects[1]);
-            collectedObjects.Remove(collectedObjects[2]);
+            
             GiveNewIndex();
-            // print(collectable.name);
         }
-        
-        
     }
     
     void GiveNewIndex()
     {
-        // foreach (var gameObject in collectedObjects)
-        // {
-        //     CollectableObj_Tarea3 col = gameObject.GetComponent<CollectableObj_Tarea3>();
-        //     col._indexList = collectedObjects.Count;
-        // }
-        firstCollectable = collectedObjects[0];
         
-        for (int i = 0; i < collectedObjects.Count -1; i++)
+        firstCollectable = collectedObjects[3];
+        
+        for (int i = 0; i < collectedObjects.Count + 3; i++)
         {
             CollectableObj_Tarea3 col = collectedObjects[i].GetComponent<CollectableObj_Tarea3>();
-            col._indexList = i;
+            col._indexList = i -1;
 
         }
         

@@ -70,13 +70,23 @@ public class SteerinngBehaviors : MonoBehaviour
        
     }
     
-    public Vector3 CalculatePursuit(Vector3 target, bool isDynamic, bool arrival)
+    public Vector3 CalculatePursuit(Vector3 target, bool isDynamic, bool arrival, bool pursuit)
     {
         Vector3 prevPosition = Vector3.zero;
         Vector3 frameTargetVelocity = Vector3.zero;
         Vector3 futurePos = Vector3.zero;
+        Vector3 currentVelocity = Vector3.zero;
+        
+        if (pursuit)
+        {
+            currentVelocity = (transform.position - prevPosition) / Time.deltaTime;
 
-        Vector3 currentVelocity = (target - prevPosition) / Time.deltaTime;
+        }
+        else
+        {
+            currentVelocity = (target - prevPosition) / Time.deltaTime;
+
+        }
         frameTargetVelocity = Vector3.Lerp(frameTargetVelocity, currentVelocity, 0.1f);
         prevPosition = target;
 
@@ -92,7 +102,7 @@ public class SteerinngBehaviors : MonoBehaviour
 
     public Vector3 CalculateEvade(Vector3 target, bool isDynamic)
     {
-        Vector3 evade = (-1) * CalculatePursuit(target,isDynamic,false);
+        Vector3 evade = (-1) * CalculatePursuit(target,isDynamic,false, true);
         return evade;
     }
     public Vector3 CalculateWander(float angle, float distanceC, float radius, bool arrival)

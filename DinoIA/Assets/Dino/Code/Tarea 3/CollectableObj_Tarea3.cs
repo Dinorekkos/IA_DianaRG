@@ -12,6 +12,7 @@ public class CollectableObj_Tarea3 : SteerinngBehaviors
     public bool isFlee;
     public bool isPursuit;
     public bool isEvade;
+    public bool isStopMoving;
 
     private SpriteRenderer renderer;
     [SerializeField] private Color _color = Color.red;
@@ -77,6 +78,10 @@ public class CollectableObj_Tarea3 : SteerinngBehaviors
     void HandlePuruit()
     {
         renderer.color = _color;
+        _target = PlayerMovement.Instance.transform.position;
+        _speed =  PlayerMovement.Instance._speed * 0.80f;
+        
+        Move(CalculatePursuit(_target,false,false, false),false,false);
     }
     
 }
