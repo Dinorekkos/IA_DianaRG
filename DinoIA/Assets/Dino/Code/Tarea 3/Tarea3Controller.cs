@@ -24,6 +24,7 @@ public class Tarea3Controller : MonoBehaviour
     private void Start()
     {
         _playerMovement.OnCollectObj += AddCollectableToRow;
+        _playerMovement.OnPursuiTouchPlayer += StopFollowLast;
         pursuitObjects = new Queue<GameObject>();
         QueueObjects = new Queue();
     }
@@ -83,24 +84,28 @@ public class Tarea3Controller : MonoBehaviour
                 pursuitObjects.Dequeue();
             }
             
-            GiveNewIndex();
+            GiveNewIndex(3);
         }
     }
     
-    void GiveNewIndex()
+    void GiveNewIndex(int outOfList)
     {
         
-        firstCollectable = collectedObjects[3];
-        
-        for (int i = 0; i < collectedObjects.Count + 3; i++)
+        firstCollectable = collectedObjects[outOfList];
+        for (int i = 0; i < collectedObjects.Count + outOfList; i++)
         {
             CollectableObj_Tarea3 col = collectedObjects[i].GetComponent<CollectableObj_Tarea3>();
             col._indexList = i -1;
 
         }
-        
-        
+    }
 
+
+    void StopFollowLast()
+    {
+        CollectableObj_Tarea3 collectable = collectedObjects[collectedObjects.Count - 1].GetComponent<CollectableObj_Tarea3>();
+        collectable.isStopMoving = true;
+        Debug.Log("Player es alcanzado por pursuit y suelta el ultimo que lo seguía");
     }
     
 }

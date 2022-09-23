@@ -14,6 +14,7 @@ public class CollectableObj_Tarea3 : SteerinngBehaviors
     public bool isEvade;
     public bool isStopMoving;
 
+    public Collider2D collider;
     private SpriteRenderer renderer;
     [SerializeField] private Color _color = Color.red;
 
@@ -24,25 +25,19 @@ public class CollectableObj_Tarea3 : SteerinngBehaviors
 
     void Update()
     {
+        if(isStopMoving) return;
+            
         if (isCollected)
-        {
             HandleFollowLeader();
-        }
 
         if (isFlee)
-        {
             HandleFlee();
-        }
 
         if (isPursuit)
-        {
             HandlePuruit();
-        }
 
         if (isEvade)
-        {
             HandleEvade();
-        }
     }
 
 
@@ -82,6 +77,9 @@ public class CollectableObj_Tarea3 : SteerinngBehaviors
         _speed =  PlayerMovement.Instance._speed * 0.80f;
         
         Move(CalculatePursuit(_target,false,false, false),false,false);
+
+        collider = GetComponent<Collider2D>();
+        collider.isTrigger = true;
     }
     
 }

@@ -15,6 +15,7 @@ public class PlayerMovement : SteerinngBehaviors
     private Mouse mouse;
     private Vector2 mouseAxis;
     public Action<GameObject> OnCollectObj;
+    public Action OnPursuiTouchPlayer;
 
 
 
@@ -52,12 +53,17 @@ public class PlayerMovement : SteerinngBehaviors
     {
         if (col.gameObject.GetComponent<CollectableObj_Tarea3>())
         {
-            col.isTrigger = false; 
             CollectableObj_Tarea3 collectable = col.gameObject.GetComponent<CollectableObj_Tarea3>();
+
+            if (collectable.isPursuit)
+            {
+                OnPursuiTouchPlayer?.Invoke();
+                return;
+            }
+            col.isTrigger = false; 
             if (collectable.isFlee) collectable.isFlee = false;
             if (collectable.isEvade) collectable.isEvade = false;
             collectable.isCollected = true;
-            
             OnCollectObj?.Invoke(col.gameObject);
             collectable._indexList = Tarea3Controller.Instance.collectedObjects.Count - 2;
            
