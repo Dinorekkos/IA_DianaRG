@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,12 +20,7 @@ public class BoardManager : MonoBehaviour
     {
         CreateBoard();
     }
-
-    void Update()
-    {
-        
-    }
-
+    
     public void CreateBoard()
     {
         tilemap = new GameObject[width, height];
@@ -44,8 +40,20 @@ public class BoardManager : MonoBehaviour
 
         gridParent.transform.position = new Vector3(width * -0.5f, height * -0.5f, 0);
     }
-    
-    
+
+
+
+    GameObject SelectGameObjectSeed()
+    {
+        GameObject myTile = new GameObject();
+
+        // if (Physics.Raycast())
+        // {
+            
+        // }
+
+        return myTile;
+    }
     
     
     
