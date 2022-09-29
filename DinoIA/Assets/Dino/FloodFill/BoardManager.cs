@@ -8,13 +8,16 @@ using UnityEngine.InputSystem;
 public class BoardManager : MonoBehaviour
 {
 
+    [Header("Tile Selected")]
+    public GameObject selectedTile;
+    public Vector2 selectedTilePos;
+
+    [Header("Tilemap")]
     [SerializeField] private GameObject prefabTile;
     [SerializeField] private GameObject gridParent;
-
-    public GameObject selectedTile;
-    
-    public int width;
-    public int height;
+    [SerializeField] private int width;
+    [SerializeField] private int height;
+    [SerializeField] private float delay;
 
     private Mouse _mouse;
     private Vector2 mouseAxis;    
@@ -37,51 +40,89 @@ public class BoardManager : MonoBehaviour
     {
         if (_mouse.leftButton.wasPressedThisFrame)
         {
-
             mouseAxis = _mouse.position.ReadValue();
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
             
-            
             if (Physics.Raycast(ray, out hit))
             {
                 selectedTile = SelectGameObjectSeed(hit);
+                StartCoroutine(FloodFill(selectedTilePos));
             }
-            
+        }
+
+        if (_mouse.rightButton.wasPressedThisFrame)
+        {
+            mouseAxis = _mouse.position.ReadValue();
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
+            if (Physics.Raycast(ray, out hit))
+            {
+                selectedTile = SelectGameObjectSeed(hit);
+                StartCoroutine(FloodFill(selectedTilePos));
+            }
 
         }
+        
+
+
     }
+    
 
     public void CreateBoard()
     {
         tilemap = new GameObject[width, height];
 
-        for (int i = 0; i < width; i++)
+        for (int y = 0; y < width; y++)
         {
-            for (int j = 0; j < height; j++)
+            for (int x = 0; x < height; x++)
             {
                GameObject cellTile = Instantiate(prefabTile);
                cellTile.transform.parent = gridParent.transform;
-               // cellTile.transform.position = new Vector3(i + (prefabTile.transform.position.x/2), j + (prefabTile.transform.position.y/ 2),0);
-               cellTile.transform.position = new Vector3(i + (0.5f * cellTile.transform.localScale.magnitude), j + (0.5f * cellTile.transform.localScale.magnitude),0);
-               cellTile.name = $"{j}-{i}";
-               tilemap[i,j] = cellTile;
+               cellTile.transform.position = new Vector3(y + (0.5f * cellTile.transform.localScale.magnitude), x + (0.5f * cellTile.transform.localScale.magnitude),0);
+               cellTile.name = $"{x}-{y}";
+               tilemap[x,y] = cellTile;
             }
         }
 
         gridParent.transform.position = new Vector3(width * -0.5f, height * -0.5f, 0);
     }
-
-
-
+    
     GameObject SelectGameObjectSeed(RaycastHit hit)
     {
         GameObject myTile = hit.transform.gameObject;
         Tile tile = myTile.GetComponent<Tile>();
-        tile.ChangeColor();
+        var coord = tile.name.Split("-");
+        selectedTilePos.x = float.Parse(coord[0]);
+        selectedTilePos.y = float.Parse(coord[1]);
         
         return myTile;
     }
+
+    IEnumerator FloodFill(Vector2 posTile)
+    {
+   
+        if (posTile.x >= 0 && posTile.x < width && posTile.y >= 0 && posTile.y < height)
+        { 
+            Tile tileFill = tilemap[(int)(posTile.x), (int)(posTile.y)].GetComponent<Tile>();
+
+            yield return new WaitForSeconds(delay);
+            if (!tileFill.isRed)
+            {
+                tileFill.ChangeColor();
+                if (posTile.x + 1 < width ) StartCoroutine(FloodFill(new Vector2((posTile.x + 1), posTile.y)));
+                if (posTile.x - 1 <= width ) StartCoroutine(FloodFill(new Vector2((posTile.x - 1), posTile.y)));
+                if (posTile.y + 1 < height) StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y + 1))));
+                if (posTile.y - 1 <= height)  StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y - 1))));
+            }
+
+        }
+        
+        
+        
+        
+    }
+    
     
     
     
