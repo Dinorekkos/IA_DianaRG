@@ -1,26 +1,57 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BoardManager : MonoBehaviour
 {
 
     [SerializeField] private GameObject prefabTile;
     [SerializeField] private GameObject gridParent;
+
+    public GameObject selectedTile;
+    
     public int width;
     public int height;
-    private GameObject[,] tilemap;
 
+    private Mouse _mouse;
+    private Vector2 mouseAxis;    
+
+
+    private GameObject[,] tilemap;
     public GameObject[,] MyTilemap
     {
         get => tilemap;
     }
     void Start()
     {
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
+        _mouse = Mouse.current;
+#endif
         CreateBoard();
     }
-    
+
+    private void Update()
+    {
+        if (_mouse.leftButton.wasPressedThisFrame)
+        {
+
+            mouseAxis = _mouse.position.ReadValue();
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
+            
+            
+            if (Physics.Raycast(ray, out hit))
+            {
+                selectedTile = SelectGameObjectSeed(hit);
+            }
+            
+
+        }
+    }
+
     public void CreateBoard()
     {
         tilemap = new GameObject[width, height];
@@ -43,15 +74,12 @@ public class BoardManager : MonoBehaviour
 
 
 
-    GameObject SelectGameObjectSeed()
+    GameObject SelectGameObjectSeed(RaycastHit hit)
     {
-        GameObject myTile = new GameObject();
-
-        // if (Physics.Raycast())
-        // {
-            
-        // }
-
+        GameObject myTile = hit.transform.gameObject;
+        Tile tile = myTile.GetComponent<Tile>();
+        tile.ChangeColor();
+        
         return myTile;
     }
     
