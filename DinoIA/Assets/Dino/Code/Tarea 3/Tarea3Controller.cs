@@ -29,13 +29,6 @@ public class Tarea3Controller : MonoBehaviour
         QueueObjects = new Queue();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-        
-    }
-
     void AddCollectableToRow(GameObject obj)
     {
         collectedObjects.Add(obj);

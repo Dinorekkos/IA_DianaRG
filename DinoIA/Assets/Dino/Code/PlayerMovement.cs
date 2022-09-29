@@ -16,12 +16,7 @@ public class PlayerMovement : SteerinngBehaviors
     private Vector2 mouseAxis;
     public Action<GameObject> OnCollectObj;
     public Action OnPursuiTouchPlayer;
-
-
-
-    // private Keyboard keyboard;
-    // public float speed = 3;
-
+    
     private void Awake()
     {
         Instance = this;
@@ -30,7 +25,6 @@ public class PlayerMovement : SteerinngBehaviors
     void Start()
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
-        // keyboard = Keyboard.current;
         mouse = Mouse.current;
 #endif
         
@@ -69,28 +63,4 @@ public class PlayerMovement : SteerinngBehaviors
            
         }
     }
-    
-    
-    // void MovePlayer()
-    // {
-        // if (keyboard.aKey.isPressed)
-        // {
-            // transform.position += Vector3.left * speed * Time.deltaTime;
-        // }
-        // if (keyboard.dKey.isPressed)
-        // {
-            // transform.position += Vector3.right * speed * Time.deltaTime;   
-        // }
-
-        // if (keyboard.wKey.isPressed)
-        // {
-            // transform.position += Vector3.forward * speed * Time.deltaTime;  
-        // }
-
-        // if (keyboard.sKey.isPressed)
-        // {
-            // transform.position += Vector3.back * speed * Time.deltaTime;  
-        // }
-        
-    // }
 }

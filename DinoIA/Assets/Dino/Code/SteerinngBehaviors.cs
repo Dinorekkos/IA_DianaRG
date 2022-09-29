@@ -80,13 +80,10 @@ public class SteerinngBehaviors : MonoBehaviour
         if (pursuit)
         {
             currentVelocity = (transform.position - prevPosition) / Time.deltaTime;
-
         }
-        else
-        {
-            currentVelocity = (target - prevPosition) / Time.deltaTime;
-
-        }
+       
+        currentVelocity = (target - prevPosition) / Time.deltaTime;
+    
         frameTargetVelocity = Vector3.Lerp(frameTargetVelocity, currentVelocity, 0.1f);
         prevPosition = target;
 
