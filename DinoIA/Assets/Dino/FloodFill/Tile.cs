@@ -8,16 +8,6 @@ public class Tile : MonoBehaviour
     public SpriteRenderer _renderer;
     public bool isRed;
     public bool isGreen;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void ChangeColor()
     {
@@ -28,17 +18,17 @@ public class Tile : MonoBehaviour
 
     public void SetGreen()
     {
+        if(CheckCurrentColor()) return;
         _renderer.color = Color.green;
         isGreen = true;
     }
 
     private bool CheckCurrentColor()
     {
-        if (isRed)
+        if (isRed || isGreen)
         {
             return true;
         }
-
         return false;
     }
 }
