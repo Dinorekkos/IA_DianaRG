@@ -38,7 +38,7 @@ public class BoardManager : MonoBehaviour
 
     private void Update()
     {
-        if (_mouse.leftButton.wasPressedThisFrame)
+        if (_mouse.leftButton.wasPressedThisFrame )
         {
             mouseAxis = _mouse.position.ReadValue();
             RaycastHit hit;
@@ -46,7 +46,7 @@ public class BoardManager : MonoBehaviour
             
             if (Physics.Raycast(ray, out hit))
             {
-                selectedTile = SelectGameObjectSeed(hit);
+                selectedTile = SelectGameObjectSeed(hit, false);
                 StartCoroutine(FloodFill(selectedTilePos));
             }
         }
@@ -58,14 +58,10 @@ public class BoardManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
             if (Physics.Raycast(ray, out hit))
             {
-                selectedTile = SelectGameObjectSeed(hit);
-                StartCoroutine(FloodFill(selectedTilePos));
+                selectedTile = SelectGameObjectSeed(hit, true);
+                
             }
-
         }
-        
-
-
     }
     
 
@@ -88,10 +84,16 @@ public class BoardManager : MonoBehaviour
         gridParent.transform.position = new Vector3(width * -0.5f, height * -0.5f, 0);
     }
     
-    GameObject SelectGameObjectSeed(RaycastHit hit)
+    GameObject SelectGameObjectSeed(RaycastHit hit, bool isObstacle)
     {
         GameObject myTile = hit.transform.gameObject;
         Tile tile = myTile.GetComponent<Tile>();
+
+        if (isObstacle)
+        {
+            tile.SetGreen();
+        }
+        
         var coord = tile.name.Split("-");
         selectedTilePos.x = float.Parse(coord[0]);
         selectedTilePos.y = float.Parse(coord[1]);
@@ -107,7 +109,7 @@ public class BoardManager : MonoBehaviour
             Tile tileFill = tilemap[(int)(posTile.x), (int)(posTile.y)].GetComponent<Tile>();
 
             yield return new WaitForSeconds(delay);
-            if (!tileFill.isRed)
+            if (!tileFill.isRed && !tileFill.isGreen)
             {
                 tileFill.ChangeColor();
                 if (posTile.x + 1 < width ) StartCoroutine(FloodFill(new Vector2((posTile.x + 1), posTile.y)));
@@ -115,12 +117,7 @@ public class BoardManager : MonoBehaviour
                 if (posTile.y + 1 < height) StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y + 1))));
                 if (posTile.y - 1 <= height)  StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y - 1))));
             }
-
         }
-        
-        
-        
-        
     }
     
     
