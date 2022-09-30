@@ -25,10 +25,8 @@ public class Tile : MonoBehaviour
 
     private bool CheckCurrentColor()
     {
-        if (isRed || isGreen)
-        {
-            return true;
-        }
+        if (isRed || isGreen) return true;
+        
         return false;
     }
 }

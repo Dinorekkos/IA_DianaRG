@@ -38,14 +38,12 @@ public class BoardManager : MonoBehaviour
     private void Update()
     {
         if (_mouse.leftButton.wasPressedThisFrame )
-        {
             SelectTileWithMouse(false);
-        }
+        
 
-        if (_mouse.rightButton.wasPressedThisFrame)
-        {
+        if (_mouse.rightButton.wasPressedThisFrame) 
             SelectTileWithMouse(true);
-        }
+        
     }
 
     void SelectTileWithMouse(bool isObstacle)
@@ -55,10 +53,7 @@ public class BoardManager : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
         if (Physics.Raycast(ray, out hit))
         {
-            if (isObstacle)
-            {
-               SetSeed(hit, true);
-            }
+            if (isObstacle) SetSeed(hit, true);
             SetSeed(hit, false);
         }
         
@@ -90,10 +85,7 @@ public class BoardManager : MonoBehaviour
         var coord = tile.name.Split("-");
         selectedTilePos.x = float.Parse(coord[0]);
         selectedTilePos.y = float.Parse(coord[1]);
-        if (isObstacle)
-        {
-            tile.SetGreen();
-        }
+        if (isObstacle) tile.SetGreen();
         StartCoroutine(DoFloodFill(selectedTilePos));
     }
 
