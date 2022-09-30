@@ -9,7 +9,6 @@ public class BoardManager : MonoBehaviour
 {
 
     [Header("Tile Selected")]
-    public GameObject selectedTile;
     public Vector2 selectedTilePos;
 
     [Header("Tilemap")]
@@ -40,30 +39,30 @@ public class BoardManager : MonoBehaviour
     {
         if (_mouse.leftButton.wasPressedThisFrame )
         {
-            mouseAxis = _mouse.position.ReadValue();
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
-            
-            if (Physics.Raycast(ray, out hit))
-            {
-                selectedTile = SelectGameObjectSeed(hit, false);
-                StartCoroutine(FloodFill(selectedTilePos));
-            }
+            SelectTileWithMouse(false);
         }
 
         if (_mouse.rightButton.wasPressedThisFrame)
         {
-            mouseAxis = _mouse.position.ReadValue();
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
-            if (Physics.Raycast(ray, out hit))
-            {
-                selectedTile = SelectGameObjectSeed(hit, true);
-                
-            }
+            SelectTileWithMouse(true);
         }
     }
-    
+
+    void SelectTileWithMouse(bool isObstacle)
+    {
+        mouseAxis = _mouse.position.ReadValue();
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(mouseAxis);
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (isObstacle)
+            {
+               SetSeed(hit, true);
+            }
+            SetSeed(hit, false);
+        }
+        
+    }
 
     public void CreateBoard()
     {
@@ -84,24 +83,21 @@ public class BoardManager : MonoBehaviour
         gridParent.transform.position = new Vector3(width * -0.5f, height * -0.5f, 0);
     }
     
-    GameObject SelectGameObjectSeed(RaycastHit hit, bool isObstacle)
+    void SetSeed(RaycastHit hit, bool isObstacle)
     {
         GameObject myTile = hit.transform.gameObject;
         Tile tile = myTile.GetComponent<Tile>();
-
+        var coord = tile.name.Split("-");
+        selectedTilePos.x = float.Parse(coord[0]);
+        selectedTilePos.y = float.Parse(coord[1]);
         if (isObstacle)
         {
             tile.SetGreen();
         }
-        
-        var coord = tile.name.Split("-");
-        selectedTilePos.x = float.Parse(coord[0]);
-        selectedTilePos.y = float.Parse(coord[1]);
-        
-        return myTile;
+        StartCoroutine(DoFloodFill(selectedTilePos));
     }
 
-    IEnumerator FloodFill(Vector2 posTile)
+    IEnumerator DoFloodFill(Vector2 posTile)
     {
    
         if (posTile.x >= 0 && posTile.x < width && posTile.y >= 0 && posTile.y < height)
@@ -112,10 +108,10 @@ public class BoardManager : MonoBehaviour
             if (!tileFill.isRed && !tileFill.isGreen)
             {
                 tileFill.ChangeColor();
-                if (posTile.x + 1 < width ) StartCoroutine(FloodFill(new Vector2((posTile.x + 1), posTile.y)));
-                if (posTile.x - 1 <= width ) StartCoroutine(FloodFill(new Vector2((posTile.x - 1), posTile.y)));
-                if (posTile.y + 1 < height) StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y + 1))));
-                if (posTile.y - 1 <= height)  StartCoroutine(FloodFill(new Vector2(posTile.x , (posTile.y - 1))));
+                if (posTile.x + 1 < width ) StartCoroutine(DoFloodFill(new Vector2((posTile.x + 1), posTile.y)));
+                if (posTile.x - 1 <= width ) StartCoroutine(DoFloodFill(new Vector2((posTile.x - 1), posTile.y)));
+                if (posTile.y + 1 < height) StartCoroutine(DoFloodFill(new Vector2(posTile.x , (posTile.y + 1))));
+                if (posTile.y - 1 <= height)  StartCoroutine(DoFloodFill(new Vector2(posTile.x , (posTile.y - 1))));
             }
         }
     }
