@@ -19,8 +19,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float delay;
 
     private Mouse _mouse;
-    private Vector2 mouseAxis;    
-
+    private Vector2 mouseAxis;
+    private Keyboard _keyboard;
 
     private GameObject[,] tilemap;
     public GameObject[,] MyTilemap
@@ -31,6 +31,7 @@ public class BoardManager : MonoBehaviour
     {
 #if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_EDITOR || UNITY_STANDALONE_LINUX
         _mouse = Mouse.current;
+        _keyboard = Keyboard.current;
 #endif
         CreateBoard();
     }
@@ -43,6 +44,12 @@ public class BoardManager : MonoBehaviour
 
         if (_mouse.rightButton.wasPressedThisFrame) 
             SelectTileWithMouse(true);
+
+        if (_keyboard.spaceKey.wasPressedThisFrame)
+        {
+           if(selectedTilePos!=null) StartCoroutine(DoFloodFill(selectedTilePos));
+
+        }
         
     }
 
@@ -54,7 +61,7 @@ public class BoardManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             if (isObstacle) SetSeed(hit, true);
-            SetSeed(hit, false);
+            else SetSeed(hit, false);
         }
         
     }
@@ -86,7 +93,9 @@ public class BoardManager : MonoBehaviour
         selectedTilePos.x = float.Parse(coord[0]);
         selectedTilePos.y = float.Parse(coord[1]);
         if (isObstacle) tile.SetGreen();
-        StartCoroutine(DoFloodFill(selectedTilePos));
+        else tile.SetSeed();
+        
+        // StartCoroutine(DoFloodFill(selectedTilePos));
     }
 
     IEnumerator DoFloodFill(Vector2 posTile)
@@ -97,9 +106,10 @@ public class BoardManager : MonoBehaviour
             Tile tileFill = tilemap[(int)(posTile.x), (int)(posTile.y)].GetComponent<Tile>();
 
             yield return new WaitForSeconds(delay);
+            // if (!tileFill.isRed && !tileFill.isGreen)
             if (!tileFill.isRed && !tileFill.isGreen)
             {
-                tileFill.ChangeColor();
+                if(!tileFill.isSeed) tileFill.SetRed();
                 if (posTile.x + 1 < width ) StartCoroutine(DoFloodFill(new Vector2((posTile.x + 1), posTile.y)));
                 if (posTile.x - 1 <= width ) StartCoroutine(DoFloodFill(new Vector2((posTile.x - 1), posTile.y)));
                 if (posTile.y + 1 < height) StartCoroutine(DoFloodFill(new Vector2(posTile.x , (posTile.y + 1))));

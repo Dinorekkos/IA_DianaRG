@@ -8,8 +8,16 @@ public class Tile : MonoBehaviour
     public SpriteRenderer _renderer;
     public bool isRed;
     public bool isGreen;
+    public bool isSeed;
 
-    public void ChangeColor()
+    public void SetSeed()
+    {
+        isSeed = true;
+        _renderer.color = Color.blue;
+
+    }
+    
+    public void SetRed()
     {
         if(CheckCurrentColor()) return; 
         _renderer.color = Color.red;
