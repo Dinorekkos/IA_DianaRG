@@ -21,14 +21,7 @@ public class Recursividad : MonoBehaviour
     
     [Header("Lista")] 
     public List<int> list;
-
-
-
-
-    void Start()
-    {
-    }
-
+    
     public void DoRecursive()
     {
         switch (selectedMethod)
@@ -54,7 +47,6 @@ public class Recursividad : MonoBehaviour
         n = n * FactorialFunction(n - 1);
         return n;
     }
-    
     
     int Fibonacci( int n)
     {
