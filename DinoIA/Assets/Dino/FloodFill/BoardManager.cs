@@ -19,8 +19,7 @@ public class BoardManager : MonoBehaviour
     private Mouse _mouse;
     private Vector2 mouseAxis;
     private Keyboard _keyboard;
-    
-
+ 
     private GameObject[,] tilemap;
     public GameObject[,] MyTilemap
     {
@@ -48,9 +47,7 @@ public class BoardManager : MonoBehaviour
         {
            if(selectedTilePos!=null) StartCoroutine(DoFloodFill(selectedTilePos));
            // if(selectedTilePos!=null) StartCoroutine(DoFloodFillQueue(selectedTilePos));
-
         }
-        
     }
 
     void SelectTileWithMouse(bool isObstacle)
