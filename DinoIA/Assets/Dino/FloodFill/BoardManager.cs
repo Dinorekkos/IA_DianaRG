@@ -8,11 +8,9 @@ using UnityEngine.InputSystem;
 public class BoardManager : MonoBehaviour
 {
 
-    [Header("Tile Selected")]
-    public Vector2 selectedTilePos;
+    [Header("Tile Selected")] public Vector2 selectedTilePos;
 
-    [Header("Tilemap")]
-    [SerializeField] private GameObject prefabTile;
+    [Header("Tilemap")] [SerializeField] private GameObject prefabTile;
     [SerializeField] private GameObject gridParent;
     [SerializeField] private int width;
     [SerializeField] private int height;
@@ -21,6 +19,7 @@ public class BoardManager : MonoBehaviour
     private Mouse _mouse;
     private Vector2 mouseAxis;
     private Keyboard _keyboard;
+    
 
     private GameObject[,] tilemap;
     public GameObject[,] MyTilemap
@@ -48,6 +47,7 @@ public class BoardManager : MonoBehaviour
         if (_keyboard.spaceKey.wasPressedThisFrame)
         {
            if(selectedTilePos!=null) StartCoroutine(DoFloodFill(selectedTilePos));
+           // if(selectedTilePos!=null) StartCoroutine(DoFloodFillQueue(selectedTilePos));
 
         }
         
@@ -119,6 +119,27 @@ public class BoardManager : MonoBehaviour
     }
     
     
-    
+    IEnumerator DoFloodFillQueue(Vector2 posTile)
+    {
+        Queue<Vector2> fill = new Queue<Vector2>();
+        fill.Enqueue(posTile);
+        while (fill.Count > 0)
+        {
+            posTile = fill.Dequeue();
+            if (posTile.x >= 0 && posTile.x < width && posTile.y >= 0 && posTile.y < height)
+            {
+                Tile tileFill = tilemap[(int)(posTile.x), (int)(posTile.y)].GetComponent<Tile>();
+                yield return new WaitForSeconds(delay);
+                if (!tileFill.isRed && !tileFill.isGreen)
+                {
+                    if(!tileFill.isSeed) tileFill.SetRed();
+                    if (posTile.x + 1 < width ) fill.Enqueue(new Vector2((posTile.x + 1), posTile.y));
+                    if (posTile.x - 1 <= width ) fill.Enqueue(new Vector2((posTile.x - 1), posTile.y));
+                    if (posTile.y + 1 < height) fill.Enqueue(new Vector2(posTile.x , (posTile.y + 1)));
+                    if (posTile.y - 1 <= height) fill.Enqueue(new Vector2(posTile.x , (posTile.y - 1)));
+                }
+            }
+        }
+    }
     
 }
