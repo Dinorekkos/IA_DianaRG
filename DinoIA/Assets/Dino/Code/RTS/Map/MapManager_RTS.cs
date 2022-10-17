@@ -17,10 +17,11 @@ public class MapManager_RTS : MonoBehaviour
     void Start()
     {
         Map_RTS mapRts = GetComponent<Map_RTS>();
+        Fields_RTS fieldsRts = GetComponent<Fields_RTS>();
         mapRts.Height = size.y;
         mapRts.Width = size.x;
         
-        GameObject[,] map = mapRts.CreateMap(prefab);
+        GameObject[,] map = mapRts.CreateMap(prefab, fieldsRts.GetSprite(0), true);
     }
 
     void Update()
