@@ -97,7 +97,7 @@ public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso =
     {
         if (_mouse.leftButton.wasPressedThisFrame)
         {
-            
+            SelectBlock();
         }
     }
 
@@ -106,6 +106,24 @@ public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso =
     {
         _mousePos = _mouse.position.ReadValue();
         RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(_mousePos);
+        if (Physics.Raycast(ray, out hit))
+        {
+            print("sale raycast" + ray.direction);
+
+            Block_RTS block = hit.collider.GetComponent<Block_RTS>();
+            if (block != null)
+            {
+                SetStart(block);
+            }
+        }
     }
+    
+    
+    void SetStart(Block_RTS block)
+    {
+        print(block.name);
+    }
+    
     
 }
