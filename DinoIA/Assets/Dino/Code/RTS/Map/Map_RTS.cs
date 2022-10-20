@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 public class Map_RTS : MonoBehaviour
@@ -16,9 +15,6 @@ public class Map_RTS : MonoBehaviour
     private bool _isIso;
     private int _order = 50;
     
-    private Vector2 _mousePos;
-    private Mouse _mouse;
-
     private Block_RTS _start;
     private Block_RTS _goal;
 
@@ -34,18 +30,19 @@ public class Map_RTS : MonoBehaviour
         set => _width = value;
     }
 
-public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso = false)
+    public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso = false)
     {
         _map = new GameObject[_width, _height];
-
+        
         for (int y = 0; y < _width; y++)
         {
             for (int x = 0; x < _height; x++)
             {
-                GameObject block = Instantiate(prefab);
+                GameObject block = Instantiate(prefab, gridParent.transform);
                 SpriteRenderer renderer = block.GetComponent<SpriteRenderer>();
-                block.transform.parent = gridParent.transform;
-                block.transform.position = new Vector3(y+(0.5f * block.transform.localScale.magnitude), x + (0.5f*block.transform.localScale.magnitude),0);
+
+                float halfSizeBlock = block.transform.localScale.magnitude * 0.5f;
+                block.transform.position = new Vector3(y+ halfSizeBlock , x + halfSizeBlock,0);
                 block.name = $"{x}-{y}";
                 _map[x, y] = block;
                 
@@ -55,10 +52,12 @@ public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso =
 
                 if (iso)
                 {
-                    _rotX = new Vector2(0.5f * (renderer.bounds.size.x + _offset),
-                        0.25f * (renderer.bounds.size.y + _offset));
-                    _rotY = new Vector2(-0.5f * (renderer.bounds.size.x + _offset),
-                        0.25f *(  renderer.bounds.size.y + _offset));
+                    Vector2 sizeSprite = renderer.bounds.size;
+                    
+                    _rotX = new Vector2(0.5f * (sizeSprite.x + _offset),
+                        0.25f * (sizeSprite.y + _offset));
+                    _rotY = new Vector2(-0.5f * (sizeSprite.x + _offset),
+                        0.25f *(sizeSprite.y + _offset));
 
                     _order--;
                     renderer.sortingOrder = _order;
@@ -67,9 +66,8 @@ public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso =
                 }
             }
         }
-
-        gridParent.transform.position = new Vector3(_width * -0.5f, _height * -0.5f, 0);
-
+        
+        CenterMap();
         return _map;
     }
 
@@ -85,45 +83,8 @@ public GameObject[,] CreateMap(GameObject prefab, Sprite sprite=null, bool iso =
 
     public void CenterMap()
     {
-        
+        gridParent.transform.position = new Vector3(0, _height * -0.5f, 0);
     }
 
-    private void Start()
-    {
-      _mouse = Mouse.current;
-     
-    }
-    private void Update()
-    {
-        if (_mouse.leftButton.wasPressedThisFrame)
-        {
-            SelectBlock();
-        }
-    }
-
-
-    void SelectBlock()
-    {
-        _mousePos = _mouse.position.ReadValue();
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(_mousePos);
-        if (Physics.Raycast(ray, out hit))
-        {
-            print("sale raycast" + ray.direction);
-
-            Block_RTS block = hit.collider.GetComponent<Block_RTS>();
-            if (block != null)
-            {
-                SetStart(block);
-            }
-        }
-    }
-    
-    
-    void SetStart(Block_RTS block)
-    {
-        print(block.name);
-    }
-    
     
 }

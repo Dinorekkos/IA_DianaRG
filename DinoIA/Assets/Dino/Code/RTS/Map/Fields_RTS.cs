@@ -9,12 +9,13 @@ public class Fields_RTS : MonoBehaviour
 
     public Sprite GetSprite(int block)
     {
-        Sprite sprite = null;
+        Sprite sprite = _sprites[block];
         return sprite;
     }
 
     public void GetMoveCost(int n)
     {
-        
+
     }
+
 }

@@ -1,6 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class MapManager_RTS : MonoBehaviour
 {
@@ -13,9 +13,12 @@ public class MapManager_RTS : MonoBehaviour
     [SerializeField] private float offset;
 
     private bool _goalSelected;
-
+    private Vector2 _mousePos;
+    private Mouse _mouse;
+    
     void Start()
     {
+        _mouse = Mouse.current;
         Map_RTS mapRts = GetComponent<Map_RTS>();
         Fields_RTS fieldsRts = GetComponent<Fields_RTS>();
         mapRts.Height = size.y;
@@ -24,9 +27,28 @@ public class MapManager_RTS : MonoBehaviour
         GameObject[,] map = mapRts.CreateMap(prefab, fieldsRts.GetSprite(0), true);
     }
 
-    void Update()
+    private void Update()
     {
-        
+        if (_mouse.leftButton.wasPressedThisFrame)
+        {
+            SelectBlock();
+        }
+    }
+
+
+    void SelectBlock()
+    {
+        _mousePos = _mouse.position.ReadValue();
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(_mousePos);
+        if (Physics.Raycast(ray, out hit))
+        {
+            Block_RTS block = hit.collider.GetComponent<Block_RTS>();
+            if (block != null)
+            {
+               SetStart(block);
+            }
+        }
     }
 
     public void RestartMap()
@@ -44,6 +66,12 @@ public class MapManager_RTS : MonoBehaviour
         
     }
     
-    
+    public void SetStart(Block_RTS block)
+    {
+        Fields_RTS fieldsRts = GetComponent<Fields_RTS>();
+        Sprite spriteBlock = fieldsRts.GetSprite(1);
+        block.gameObject.GetComponent<SpriteRenderer>().sprite = spriteBlock;
+    }
+
     
 }
