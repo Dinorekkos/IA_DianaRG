@@ -12,8 +12,6 @@ public class Block_RTS : MonoBehaviour
     private MapManager_RTS _manager;
     private int _obstacle;
     private int _moveCost;
-   
-
 
     public Vector2Int Coordinates
     {
@@ -27,6 +25,9 @@ public class Block_RTS : MonoBehaviour
         set
         {
             Vector2Int coordinates = Vector2Int.zero;
+
+            _x = coordinates.x;
+            _y = coordinates.y;
             coordinates = value;
         }
     }
@@ -40,6 +41,11 @@ public class Block_RTS : MonoBehaviour
         
     }
 
+    public void SetCoordinates(int x, int y)
+    {
+        _x = x;
+        _y = y;
+    }
    
     
 }

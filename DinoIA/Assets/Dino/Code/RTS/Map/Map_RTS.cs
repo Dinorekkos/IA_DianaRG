@@ -5,7 +5,7 @@ using UnityEngine;
 public class Map_RTS : MonoBehaviour
 {
     [SerializeField] private GameObject gridParent;
-    
+
     private GameObject[,] _map;
     private int _height;
     private int _width;
@@ -14,9 +14,33 @@ public class Map_RTS : MonoBehaviour
     private float _offset;
     private bool _isIso;
     private int _order = 50;
-    
+
     private Block_RTS _start;
     private Block_RTS _goal;
+
+    public GameObject[,] Map
+    {
+        get => _map;
+    }
+    public Block_RTS Start
+    {
+        get => _start;
+        set
+        {
+            _start = value; 
+            if(_start!=null) Debug.Log("<color=#FFBB33>Start = </color>" +_start.Coordinates);
+        } 
+    }
+
+    public Block_RTS Goal
+    {
+        get => _goal;
+        set
+        {
+            _goal = value;
+            if (_goal!=null) Debug.Log("<color=#FFBB33>Goal = </color>" + _goal.Coordinates);
+        }
+    }
 
     public int Height
     {
@@ -27,6 +51,7 @@ public class Map_RTS : MonoBehaviour
     public int Width
     {
         get => _width;
+        
         set => _width = value;
     }
 
@@ -48,7 +73,7 @@ public class Map_RTS : MonoBehaviour
                 
                 AddComponents(block);
                 Block_RTS myBlock = block.GetComponent<Block_RTS>();
-                // myBlock.Coordinates = new Vector2Int()
+                myBlock.SetCoordinates(x, y);
 
                 if (iso)
                 {

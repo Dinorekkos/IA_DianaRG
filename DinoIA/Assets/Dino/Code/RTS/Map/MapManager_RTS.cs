@@ -12,31 +12,53 @@ public class MapManager_RTS : MonoBehaviour
     [SerializeField] private Color endColor;
     [SerializeField] private float offset;
 
+    private Map_RTS _mapRts;
+    private Fields_RTS _fieldsRts;
+    private FloodPath_RTS _floodPathRts;
     private bool _goalSelected;
     private Vector2 _mousePos;
     private Mouse _mouse;
+    private Keyboard _keyboard;
     
     void Start()
     {
         _mouse = Mouse.current;
-        Map_RTS mapRts = GetComponent<Map_RTS>();
-        Fields_RTS fieldsRts = GetComponent<Fields_RTS>();
-        mapRts.Height = size.y;
-        mapRts.Width = size.x;
+        _keyboard =Keyboard.current;
+        _mapRts = GetComponent<Map_RTS>();
+        _fieldsRts = GetComponent<Fields_RTS>();
+        _floodPathRts = GetComponent<FloodPath_RTS>();
+        _mapRts.Height = size.y;
+        _mapRts.Width = size.x;
         
-        GameObject[,] map = mapRts.CreateMap(prefab, fieldsRts.GetSprite(0), true);
+        GameObject[,] map = _mapRts.CreateMap(prefab, _fieldsRts.GetSprite(0), true);
     }
 
     private void Update()
     {
         if (_mouse.leftButton.wasPressedThisFrame)
         {
-            SelectBlock();
+            SelectBlock(true);
         }
+
+        if (_mouse.rightButton.wasPressedThisFrame)
+        {
+            SelectBlock(false);
+        }
+
+        if (_keyboard.rKey.wasPressedThisFrame)
+        {
+            RestartMap();
+        }
+
+        if (_keyboard.spaceKey.wasPressedThisFrame)
+        {
+            _floodPathRts.GetPath();
+        }
+        
     }
 
 
-    void SelectBlock()
+    void SelectBlock(bool isStart)
     {
         _mousePos = _mouse.position.ReadValue();
         RaycastHit hit;
@@ -46,14 +68,32 @@ public class MapManager_RTS : MonoBehaviour
             Block_RTS block = hit.collider.GetComponent<Block_RTS>();
             if (block != null)
             {
-               SetStart(block);
+                if (isStart)
+                {
+                    if (_mapRts.Start != null) return;
+                    SetStart(block);   
+                }
+                else
+                {
+                    if(_mapRts.Goal != null) return;
+                    SetEnd(block);
+                    
+                }
+                
             }
         }
     }
 
     public void RestartMap()
     {
-        
+        if (_mapRts.Start != null ||_mapRts.Goal != null)
+        {
+            Sprite spriteBlock = _fieldsRts.GetSprite(0);
+            _mapRts.Start.GetComponent<SpriteRenderer>().sprite = spriteBlock;
+            _mapRts.Goal.GetComponent<SpriteRenderer>().sprite = spriteBlock; 
+        }
+        _mapRts.Start = null;
+        _mapRts.Goal = null;
     }
 
     public void UpdatePoints(Vector2Int block)
@@ -66,12 +106,21 @@ public class MapManager_RTS : MonoBehaviour
         
     }
     
-    public void SetStart(Block_RTS block)
+    void SetStart(Block_RTS blockStart)
     {
-        Fields_RTS fieldsRts = GetComponent<Fields_RTS>();
-        Sprite spriteBlock = fieldsRts.GetSprite(1);
-        block.gameObject.GetComponent<SpriteRenderer>().sprite = spriteBlock;
+        _mapRts.Start = blockStart;
+        Sprite spriteBlock = _fieldsRts.GetSprite(2);
+        blockStart.gameObject.GetComponent<SpriteRenderer>().sprite = spriteBlock;
     }
+
+    void SetEnd(Block_RTS blocKEnd)
+    {
+        _mapRts.Goal = blocKEnd;
+        Sprite spriteBlock = _fieldsRts.GetSprite(2);
+        blocKEnd.gameObject.GetComponent<SpriteRenderer>().sprite = spriteBlock;
+
+    }
+    
 
     
 }
