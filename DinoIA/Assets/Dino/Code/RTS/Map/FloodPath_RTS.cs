@@ -5,16 +5,18 @@ using UnityEngine;
 public class FloodPath_RTS : MonoBehaviour
 {
     private Queue<Block_RTS> _frontier;
-    private Dictionary<Block_RTS, Block_RTS> _comeFrom;
+    private Dictionary<Block_RTS, Block_RTS> _cameFrom;
     private Map_RTS _map;
     private MapManager_RTS _manager;
+    private Fields_RTS _fieldsRts;
     
     void Start()
     {
         _map = GetComponent<Map_RTS>();
         _manager = GetComponent<MapManager_RTS>();
+        _fieldsRts = GetComponent<Fields_RTS>();
         _frontier = new Queue<Block_RTS>();
-        _comeFrom = new Dictionary<Block_RTS, Block_RTS>();
+        _cameFrom = new Dictionary<Block_RTS, Block_RTS>();
     }
 
     void Update()
@@ -35,7 +37,7 @@ public class FloodPath_RTS : MonoBehaviour
         Block_RTS goalBlock = _map.Goal;
        
         _frontier.Enqueue(startBlock);
-        _comeFrom[startBlock] = null;
+        _cameFrom[startBlock] = null;
 
         while (_frontier.Count > 0)
         {
@@ -43,30 +45,28 @@ public class FloodPath_RTS : MonoBehaviour
             GetNeighbours(currentBlock);
         }
 
-
-
-
-
+        PrintPath(startBlock, goalBlock);
     }
 
-    private void GetNeighbours(Block_RTS block)
+    private void GetNeighbours(Block_RTS currentBlock)
     {
+        Debug.Log("entra a getneighboors" + currentBlock.Coordinates);
 
-        if (CheckLimits(block.Coordinates.x + 1, block.Coordinates.y))
-            AddNext(block, block.Coordinates.x + 1 , block.Coordinates.y);
+        if (CheckLimits(currentBlock.Coordinates.x + 1, currentBlock.Coordinates.y))
+            AddNext(currentBlock, currentBlock.Coordinates.x + 1 , currentBlock.Coordinates.y);
 
-        if (CheckLimits(block.Coordinates.x - 1, block.Coordinates.y))
-            AddNext(block, block.Coordinates.x - 1 , block.Coordinates.y);
+        if (CheckLimits(currentBlock.Coordinates.x - 1, currentBlock.Coordinates.y))
+            AddNext(currentBlock, currentBlock.Coordinates.x - 1 , currentBlock.Coordinates.y);
         
 
-        if (CheckLimits(block.Coordinates.x, block.Coordinates.y + 1))
-            AddNext(block, block.Coordinates.x , block.Coordinates.y +1);
+        if (CheckLimits(currentBlock.Coordinates.x, currentBlock.Coordinates.y + 1))
+            AddNext(currentBlock, currentBlock.Coordinates.x , currentBlock.Coordinates.y +1);
         
 
-        if (CheckLimits(block.Coordinates.x, block.Coordinates.y - 1))
-             AddNext(block, block.Coordinates.x , block.Coordinates.y - 1);
+        if (CheckLimits(currentBlock.Coordinates.x, currentBlock.Coordinates.y - 1))
+             AddNext(currentBlock, currentBlock.Coordinates.x , currentBlock.Coordinates.y - 1);
 
-        Debug.Log("entra a getneighboors" + block.Coordinates);
+       
 
 
 
@@ -76,6 +76,8 @@ public class FloodPath_RTS : MonoBehaviour
     {
         if (x >= 0 && x < _map.Width && y >= 0 && y < _map.Height)
         {
+            Debug.Log("Check limits true");
+
             return true;
         }
         
@@ -86,16 +88,24 @@ public class FloodPath_RTS : MonoBehaviour
     {
         Block_RTS nextBlock = _map.Map[x,y].GetComponent<Block_RTS>();
 
-        if (_comeFrom.ContainsValue(nextBlock))
+        if (!_cameFrom.ContainsValue(nextBlock))
         {
-            Debug.Log("entra a getneighboors" );
-
+            Debug.Log("Agregar next" + nextBlock.Coordinates );
+            _frontier.Enqueue(nextBlock);
+            _cameFrom[nextBlock] = currentBlock;
         }
 
     }
 
-    private void PrintPath()
+    private void PrintPath(Block_RTS startBlock, Block_RTS goalBlock)
     {
+        Block_RTS current = _cameFrom[goalBlock];
+        if (current != startBlock)
+        {
+            Block_RTS prePrevious = _cameFrom[current];
+            prePrevious.Renderer.sprite = _fieldsRts.GetSprite(2);
+
+        }
         
     }
 }

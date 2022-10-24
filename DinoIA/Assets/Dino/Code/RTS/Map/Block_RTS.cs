@@ -32,6 +32,15 @@ public class Block_RTS : MonoBehaviour
         }
     }
 
+    public SpriteRenderer Renderer
+    {
+        get
+        {
+            _renderer = GetComponent<SpriteRenderer>();
+            return _renderer;
+        }
+    }
+
     private void Awake()
     {
     }
