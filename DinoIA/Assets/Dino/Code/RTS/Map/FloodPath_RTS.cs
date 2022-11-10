@@ -30,7 +30,7 @@ public class FloodPath_RTS : MonoBehaviour
         if (_map.Start == null && _map.Goal == null) return;
         if (_map.Start == null || _map.Goal == null) return;
             
-        Debug.Log("<color=#33FFE6>Start Path</color>");
+        // Debug.Log("<color=#33FFE6>Start Path</color>");
 
         
         Block_RTS startBlock = _map.Start;
@@ -42,6 +42,8 @@ public class FloodPath_RTS : MonoBehaviour
         while (_frontier.Count > 0)
         {
             Block_RTS currentBlock = _frontier.Dequeue();
+            Debug.Log("<color=#33FFE6>CURRENT BLOCK WHILE= </color>" + currentBlock.Coordinates);
+
             GetNeighbours(currentBlock);
         }
 
@@ -65,11 +67,7 @@ public class FloodPath_RTS : MonoBehaviour
 
         if (CheckLimits(currentBlock.Coordinates.x, currentBlock.Coordinates.y - 1))
              AddNext(currentBlock, currentBlock.Coordinates.x , currentBlock.Coordinates.y - 1);
-
-       
-
-
-
+        
     }
 
     private bool CheckLimits(int x, int y)
