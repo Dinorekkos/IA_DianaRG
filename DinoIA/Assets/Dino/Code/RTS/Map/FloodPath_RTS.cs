@@ -76,21 +76,19 @@ public class FloodPath_RTS : MonoBehaviour
 
     private bool CheckLimits(int x, int y)
     {
-        if (x >= 0 && x < _map.Width && y >= 0 && y < _map.Height)
+        if (x >= _map.Width | y>= _map.Height | x < 0 | y <0)
         {
-            Debug.Log("Check limits true");
-
-            return true;
+            return false;
         }
-        
-        return false;
+        Debug.Log("Check limits true");
+        return true;
     }
 
     private void AddNext(Block_RTS currentBlock, int x, int y)
     {
         Block_RTS nextBlock = _map.Map[x,y].GetComponent<Block_RTS>();
 
-        if (_cameFrom.ContainsValue(nextBlock))
+        if (!_cameFrom.ContainsKey(nextBlock))
         {
             Debug.Log("Agregar next block = " + nextBlock.Coordinates );
             _frontier.Enqueue(nextBlock);
