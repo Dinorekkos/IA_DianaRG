@@ -92,6 +92,7 @@ public class MapManager_RTS : MonoBehaviour
             _mapRts.Start.GetComponent<SpriteRenderer>().sprite = spriteBlock;
             _mapRts.Goal.GetComponent<SpriteRenderer>().sprite = spriteBlock; 
         }
+        _floodPathRts.ClearPath(_mapRts.Start,  _mapRts.Goal);
         _mapRts.Start = null;
         _mapRts.Goal = null;
     }

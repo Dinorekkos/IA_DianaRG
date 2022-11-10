@@ -29,9 +29,6 @@ public class FloodPath_RTS : MonoBehaviour
 
         if (_map.Start == null && _map.Goal == null) return;
         if (_map.Start == null || _map.Goal == null) return;
-            
-        // Debug.Log("<color=#33FFE6>Start Path</color>");
-
         
         Block_RTS startBlock = _map.Start;
         Block_RTS goalBlock = _map.Goal;
@@ -41,13 +38,7 @@ public class FloodPath_RTS : MonoBehaviour
 
         while (_frontier.Count > 0)
         {
-            Debug.Log("<color=#33FFE6>FRONTIER COUNT PRE DEQUE </color>" + _frontier.Count);
-            
             Block_RTS currentBlock = _frontier.Dequeue();
-            Debug.Log("<color=#33FFE6>FRONTIER COUNT POS DEQUE </color>" + _frontier.Count);
-
-            Debug.Log("<color=#33FFE6>CURRENT BLOCK WHILE= </color>" + currentBlock.Coordinates);
-
             GetNeighbours(currentBlock);
 
         }
@@ -60,7 +51,6 @@ public class FloodPath_RTS : MonoBehaviour
         int x = currentBlock.Coordinates.x;
         int y = currentBlock.Coordinates.y;
         
-        Debug.Log("entra a getneighboors" + currentBlock.Coordinates);
 
         if (CheckLimits(x + 1, y)) AddNext(currentBlock, x + 1 , y);
 
@@ -80,21 +70,17 @@ public class FloodPath_RTS : MonoBehaviour
         {
             return false;
         }
-        Debug.Log("Check limits true");
         return true;
     }
 
     private void AddNext(Block_RTS currentBlock, int x, int y)
     {
         Block_RTS nextBlock = _map.Map[x,y].GetComponent<Block_RTS>();
-
         if (!_cameFrom.ContainsKey(nextBlock))
         {
-            Debug.Log("Agregar next block = " + nextBlock.Coordinates );
             _frontier.Enqueue(nextBlock);
             _cameFrom[nextBlock] = currentBlock;
         }
-
     }
 
     private void PrintPath(Block_RTS startBlock, Block_RTS goalBlock)
@@ -104,11 +90,24 @@ public class FloodPath_RTS : MonoBehaviour
         while (current != startBlock)
         {
             current.Renderer.sprite = _fieldsRts.GetSprite(2);
-            
             current = _cameFrom[current];
-            
-
         }
-      
+    }
+
+    public void ClearPath(Block_RTS startBlock, Block_RTS goalBlock)
+    {
+        Block_RTS current = _cameFrom[goalBlock];
+        if (!_cameFrom.ContainsKey(current)) return;
+
+        while (current != startBlock)
+        {
+            current.Renderer.sprite = _fieldsRts.GetSprite(0);
+            current = _cameFrom[current];
+        }
+        
+        _frontier.Clear();
+        _cameFrom.Clear();
+        _frontier = new Queue<Block_RTS>();
+        _cameFrom = new Dictionary<Block_RTS, Block_RTS>();
     }
 }
