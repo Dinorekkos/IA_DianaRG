@@ -41,32 +41,36 @@ public class FloodPath_RTS : MonoBehaviour
 
         while (_frontier.Count > 0)
         {
+            Debug.Log("<color=#33FFE6>FRONTIER COUNT PRE DEQUE </color>" + _frontier.Count);
+            
             Block_RTS currentBlock = _frontier.Dequeue();
+            Debug.Log("<color=#33FFE6>FRONTIER COUNT POS DEQUE </color>" + _frontier.Count);
+
             Debug.Log("<color=#33FFE6>CURRENT BLOCK WHILE= </color>" + currentBlock.Coordinates);
 
             GetNeighbours(currentBlock);
-        }
 
+        }
         PrintPath(startBlock, goalBlock);
+
     }
 
     private void GetNeighbours(Block_RTS currentBlock)
     {
+        int x = currentBlock.Coordinates.x;
+        int y = currentBlock.Coordinates.y;
+        
         Debug.Log("entra a getneighboors" + currentBlock.Coordinates);
 
-        if (CheckLimits(currentBlock.Coordinates.x + 1, currentBlock.Coordinates.y))
-            AddNext(currentBlock, currentBlock.Coordinates.x + 1 , currentBlock.Coordinates.y);
+        if (CheckLimits(x + 1, y)) AddNext(currentBlock, x + 1 , y);
 
-        if (CheckLimits(currentBlock.Coordinates.x - 1, currentBlock.Coordinates.y))
-            AddNext(currentBlock, currentBlock.Coordinates.x - 1 , currentBlock.Coordinates.y);
+        if (CheckLimits(x - 1, y)) AddNext(currentBlock, x - 1 , y);
         
 
-        if (CheckLimits(currentBlock.Coordinates.x, currentBlock.Coordinates.y + 1))
-            AddNext(currentBlock, currentBlock.Coordinates.x , currentBlock.Coordinates.y +1);
+        if (CheckLimits(x, y + 1)) AddNext(currentBlock, x , y + 1);
         
 
-        if (CheckLimits(currentBlock.Coordinates.x, currentBlock.Coordinates.y - 1))
-             AddNext(currentBlock, currentBlock.Coordinates.x , currentBlock.Coordinates.y - 1);
+        if (CheckLimits(x, y - 1)) AddNext(currentBlock, x , y - 1);
         
     }
 
@@ -86,9 +90,9 @@ public class FloodPath_RTS : MonoBehaviour
     {
         Block_RTS nextBlock = _map.Map[x,y].GetComponent<Block_RTS>();
 
-        if (!_cameFrom.ContainsValue(nextBlock))
+        if (_cameFrom.ContainsValue(nextBlock))
         {
-            Debug.Log("Agregar next" + nextBlock.Coordinates );
+            Debug.Log("Agregar next block = " + nextBlock.Coordinates );
             _frontier.Enqueue(nextBlock);
             _cameFrom[nextBlock] = currentBlock;
         }
@@ -98,12 +102,15 @@ public class FloodPath_RTS : MonoBehaviour
     private void PrintPath(Block_RTS startBlock, Block_RTS goalBlock)
     {
         Block_RTS current = _cameFrom[goalBlock];
-        if (current != startBlock)
+
+        while (current != startBlock)
         {
-            Block_RTS prePrevious = _cameFrom[current];
-            prePrevious.Renderer.sprite = _fieldsRts.GetSprite(2);
+            current.Renderer.sprite = _fieldsRts.GetSprite(2);
+            
+            current = _cameFrom[current];
+            
 
         }
-        
+      
     }
 }
